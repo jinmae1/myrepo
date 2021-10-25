@@ -8,5 +8,9 @@ public class HelloGit {
 		System.out.println("hello master~");
 		System.out.println("hello animal~");
 	}
+	
+	public void remote() {
+		System.out.println("원격 저장소에서 작성");
+	}
 
 }
