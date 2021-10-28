@@ -11,7 +11,7 @@ public class HelloGit {
 	
 	public void remote() {
 		System.out.println("원격 저장소에서 작성");
-		Systtem.out.println("pull");
+		System.out.println("pull");
 	}
 
 }
