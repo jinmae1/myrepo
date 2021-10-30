@@ -12,8 +12,12 @@ public class MemberService {
 	public int insertMember(Member member) {
 		Connection conn = JdbcTemplate.getConnection();
 		System.out.println(conn);
+
+		int result = memberDao.insertMember(conn, member);
+		if (result > 0) JdbcTemplate.commit(conn);
+		else JdbcTemplate.rollback(conn);
 		JdbcTemplate.close(conn);
-		return 0;
+		return result;
 	}
 
 }

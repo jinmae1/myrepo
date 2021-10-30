@@ -54,52 +54,52 @@
                 <tr>
                     <th>아이디<span class="req">*</span></th>
                     <td>
-                        <input type="text" name="userId" id="userId" />
+                        <input type="text" name="userId" id="userId" value="linux1"/>
                     </td>
                 </tr>
                 <tr>
                     <th>비밀번호<span class="req">*</span></th>
                     <td>
-                        <input type="password" name="pwd" id="pwd" />
+                        <input type="text" name="pwd" id="pwd" value="!@#$qwer"/>
                     </td>
                 </tr>
                 <tr>
                     <th>비밀번호확인</th>
                     <td>
-                        <input type="password" id="pwdCheck" />
+                        <input type="text" id="pwdCheck" value="!@#$qwer"/>
                     </td>
                 </tr>
                 <tr>
                     <th>이름<span class="req">*</span></th>
                     <td>
-                        <input type="text" name="userName" id="userName" />
+                        <input type="text" name="userName" id="userName" value="리누스"/>
                     </td>
                 </tr>
                 <tr>
                     <th>주민번호<span class="req">*</span></th>
                     <td>
-                        <input type="text" name="ssn1" id="ssn1" class="short" />-
-                        <input type="password" name="ssn2" id="ssn2" class="short" />
+                        <input type="text" name="ssn1" id="ssn1" class="short" value="111111"/>-
+                        <input type="text" name="ssn2" id="ssn2" class="short" value="1111111"/>
                     </td>
                 </tr>
                 <tr>
                     <th>이메일<span class="req">*</span></th>
                     <td>
-                        <input type="email" name="email" id="email" />
+                        <input type="email" name="email" id="email" value="linus@torvalds.org"/>
                     </td>
                 </tr>
                 <tr>
                     <th>전화번호<span class="req">*</span></th>
                     <td>
-                        <input type="text" name="tel1" id="tel1" class="phone" />-
-                        <input type="text" name="tel2" id="tel2" class="phone" />-
-                        <input type="text" name="tel3" id="tel3" class="phone" />
+                        <input type="text" name="tel1" id="tel1" class="phone" value="010"/>-
+                        <input type="text" name="tel2" id="tel2" class="phone" value="1234"/>-
+                        <input type="text" name="tel3" id="tel3" class="phone" value="5678"/>
                     </td>
                 </tr>
                 <tr>
                     <th>직업</th>
                     <td>
-                        <select name="job" id="job">
+                        <select name="job" id="job" value="디자이너">
                             <option value="공무원">공무원</option>
                             <option value="개발자">개발자</option>
                             <option value="무직">무직</option>
@@ -109,11 +109,11 @@
                 <tr>
                     <th>취미</th>
                     <td>
-                        <input type="checkbox" name="hobby" id="hobby1" value="reading" />
+                        <input type="checkbox" name="hobby" id="hobby1" value="reading" checked />
                         <label for="hobby1">독서</label>
                         <input type="checkbox" name="hobby" id="hobby2" value="development" />
                         <label for="hobby2">개발</label>
-                        <input type="checkbox" name="hobby" id="hobby3" value="exercise" />
+                        <input type="checkbox" name="hobby" id="hobby3" value="exercise" checked />
                         <label for="hobby3">운동</label>
                         <input type="checkbox" name="hobby" id="hobby4" value="game" />
                         <label for="hobby4">게임</label>
