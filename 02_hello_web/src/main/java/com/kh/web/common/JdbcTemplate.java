@@ -1,29 +1,31 @@
 package com.kh.web.common;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOError;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLRecoverableException;
 import java.util.Properties;
 
+/**
+ * 
+ * static 자원을 사용하는 jdbc 공용클래스
+ *
+ */
 public class JdbcTemplate {
-
+	
 	private static String driverClass;
-	private static String url;
+	private static String url; // 접속프로토콜@url:port:sid
 	private static String user;
 	private static String password;
-
+	
 	static {
-
 		// build-path의 절대경로 가져오기
 		// / -> /src/main/webapp/WEB-INF/classes/
-		final String datasourceConfigPath = JdbcTemplate.class.getResource("/datasource.properties").getPath();
+		final String datasourceConfigPath = 
+				JdbcTemplate.class.getResource("/datasource.properties").getPath();
 		System.out.println(datasourceConfigPath);
 		Properties prop = new Properties();
 		try {
@@ -32,18 +34,12 @@ public class JdbcTemplate {
 			url = prop.getProperty("url");
 			user = prop.getProperty("user");
 			password = prop.getProperty("password");
-
-			if (driverClass == null || url == null || user == null || password == null)
-				throw new NullPointerException("속성값이 없습니다. " + datasourceConfigPath + "를 확인하세요");
-
-		} catch (FileNotFoundException e) {
-			System.err.println("파일을 찾을 수 없습니다.");
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-
-		// 1. driver class 등록: 프로그램 실행 시 최초 1회만 처리
+		};
+		
 		try {
+			// 1. driver class 등록 : 프로그램 실행시 최초 1회만 처리
 			Class.forName(driverClass);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -51,22 +47,11 @@ public class JdbcTemplate {
 	}
 
 	public static Connection getConnection() {
-		// 2. Connection객체 생성(auto commit false 처리)
+		// 2. Connection객체 생성(autoCommit false처리)
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(url, user, password);
 			conn.setAutoCommit(false);
-		} catch (SQLRecoverableException e) {
-			System.err.println("DB서버의 주소를 확인해주세요");
-		} catch (SQLException e) {
-			if (e.getMessage().contains("username/password")) {
-				System.err.println(e.getMessage());
-				System.err.println("아이디/비밀번호를 확인해주세요");
-			}
-			if (e.getMessage().contains("locked")) {
-				System.err.println(e.getMessage());
-				System.err.println("계정이 잠겼습니다.");
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -75,7 +60,7 @@ public class JdbcTemplate {
 
 	public static void commit(Connection conn) {
 		try {
-			if (conn != null && !conn.isClosed())
+			if(conn != null && !conn.isClosed())
 				conn.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -84,7 +69,7 @@ public class JdbcTemplate {
 
 	public static void rollback(Connection conn) {
 		try {
-			if (conn != null && !conn.isClosed())
+			if(conn != null && !conn.isClosed())
 				conn.rollback();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -93,28 +78,29 @@ public class JdbcTemplate {
 
 	public static void close(Connection conn) {
 		try {
-			if (conn != null && !conn.isClosed())
+			if(conn != null && !conn.isClosed())
 				conn.close();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}		
 	}
 
 	public static void close(PreparedStatement pstmt) {
 		try {
-			if (pstmt != null && !pstmt.isClosed())
+			if(pstmt != null && !pstmt.isClosed())
 				pstmt.close();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}		
 	}
-
+	
 	public static void close(ResultSet rset) {
 		try {
-			if (rset != null && !rset.isClosed())
+			if(rset != null && !rset.isClosed())
 				rset.close();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}		
 	}
+	
 }
