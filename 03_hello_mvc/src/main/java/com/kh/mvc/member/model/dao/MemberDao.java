@@ -22,6 +22,8 @@ public class MemberDao {
 		try {
 			prop.load(new FileReader(filepath));
 			System.out.println("prop@dao = " + prop);
+			System.out.println(filepath);
+			System.out.println(MemberDao.class.getResource("/member-query.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
