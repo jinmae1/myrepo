@@ -9,4 +9,13 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
+  <session-config>
+  	<session-timeout>30</session-timeout> <!-- 단위 분 -->
+  </session-config> 
+  
+  <listener>
+  	<listener-class>com.kh.mvc.common.listener.SessionCounterListener</listener-class>
+  </listener>
+  
 </web-app>

@@ -3,13 +3,16 @@ package com.kh.mvc.member.model.vo;
 import java.io.Serializable;
 import java.sql.Date;
 
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
+
 /**
  * 
  * @author jinmae1
  * VO 클래스
  * - Serializable 인터페이스 구현(세션 관리 시에 객체단위로 입출력 가능해야 한다.)
  */
-public class Member implements Serializable {
+public class Member implements Serializable, HttpSessionBindingListener {
 
 	/**
 	 * 
@@ -142,5 +145,25 @@ public class Member implements Serializable {
 				+ ", memberRole=" + memberRole + ", gender=" + gender + ", birthday=" + birthday + ", email=" + email
 				+ ", phone=" + phone + ", address=" + address + ", hobby=" + hobby + ", enrollDate=" + enrollDate + "]";
 	}
+
+	/**
+	 * 
+	 * @param event
+	 * Member 객체가 session.setAttribute된 경우에 이벤트 발생
+	 */
+	@Override
+	public void valueBound(HttpSessionBindingEvent event) {
+		System.out.println("valueBound: " + this.memberName + "님이 로그인했습니다.");
+	}
+
+	/**
+	 * Member 객체가 session.removeAttribute된 경우에 이벤트 발생
+	 */
+	@Override
+	public void valueUnbound(HttpSessionBindingEvent event) {
+		System.out.println("valueUnbound: " + this.memberName + "님이 로그아웃했습니다.");
+	}
+	
+	
 	
 }
