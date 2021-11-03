@@ -8,25 +8,25 @@
 			<tr>
 				<th>아이디<sup>*</sup></th>
 				<td>
-					<input type="text" placeholder="4글자이상" name="memberId" id="_memberId" value="ThisisID" required>
+					<input type="text" placeholder="4글자이상" name="memberId" id="_memberId" required>
 				</td>
 			</tr>
 			<tr>
 				<th>패스워드<sup>*</sup></th>
 				<td>
-					<input type="password" name="password" id="_password" value="1234" required><br>
+					<input type="password" name="password" id="_password" required><br>
 				</td>
 			</tr>
 			<tr>
 				<th>패스워드확인<sup>*</sup></th>
 				<td>	
-					<input type="password" id="passwordCheck" value="1234" required><br>
+					<input type="password" id="passwordCheck" required><br>
 				</td>
 			</tr>  
 			<tr>
 				<th>이름<sup>*</sup></th>
 				<td>	
-				<input type="text"  name="memberName" id="memberName" value="김자바" required><br>
+				<input type="text"  name="memberName" id="memberName" required><br>
 				</td>
 			</tr>
 			<tr>
@@ -44,7 +44,7 @@
 			<tr>
 				<th>휴대폰<sup>*</sup></th>
 				<td>	
-					<input type="tel" placeholder="(-없이)01012345678" name="phone" id="phone" maxlength="11" value="01012345678" required><br>
+					<input type="tel" placeholder="(-없이)01012345678" name="phone" id="phone" maxlength="11" required><br>
 				</td>
 			</tr>
 			<tr>
@@ -79,57 +79,48 @@
 </section>
 <script>
 /**
- * name=memberEnrollFrm 유효성 검사
- * - id/비번 영문자/숫자 4글자 이상
+ * name=memberEnrollFrm 유효성검사
+ * - id/비번 영문자/숫자 4글자이상
  * - 이름 한글 2글자 이상
  * - 전화번호 숫자확인
  */
- $(document.memberEnrollFrm).submit((e) => {
- 	
- 	//memberId
- 	const $memberId = $(_memberId);
- 	//아이디는 영문자/숫자  4글자이상만 허용 
- 	if($memberId.value.length < 4){
- 		alert("아이디는 최소 4자리이상이어야 합니다.");
- 		return false;
- 		
- 	}
- 	
- 	//password
- 	const $passoword = $(_password);
- 	const $passwordCheck = $(passwordCheck);
- 	if($password.value.length < 4){
- 		alert("유효한 패스워드를 입력하세요.");
- 		return false;
- 		
- 	}
- 	if($password.value !== $passwordCheck.value){
- 		alert("패스워드가 일치하지 않습니다.");
- 		return false;
- 		
- 	}
- 	
- 	//memberName
- 	const $memberName = $(memberName);
- 	if($memberName.value < 2){
- 		alert("이름은 한글 2글자 이상이어야 합니다.");
- 		return false;
- 		
- 	}
- 	
- 	//phone
- 	const $phone = $(phone);
+$(document.memberEnrollFrm).submit((e) => {
+	
+	//memberId
+	const $memberId = $(_memberId);
+	//아이디는 영문자/숫자  4글자이상만 허용 
+	if(!/^\w{4,}$/.test($memberId.val())){
+		alert("아이디는 최소 4자리이상이어야 합니다.");
+		return false;
+	}
+	
+	//password
+	const $password = $(_password);
+	const $passwordCheck = $(passwordCheck);
+	if(!/^[a-zA-Z0-9!@#$]{4,}$/.test($password.val())){
+		alert("유효한 패스워드를 입력하세요.");
+		return false;
+	}
+	if($password.val() != $passwordCheck.val()){
+		alert("패스워드가 일치하지 않습니다.");
+		return false;
+	}
+	
+	//memberName
+	const $memberName = $(memberName);
+	if(!/^[가-힣]{2,}$/.test($memberName.val())){
+		alert("이름은 한글 2글자 이상이어야 합니다.");
+		return false;
+	}
+	
+	//phone
+	const $phone = $(phone);
 
- 	if(!(10 <= $phone.value.length && $phone.value.length <= 11)){
- 		alert("유효한 전화번호가 아닙니다.");
- 		return false;
- 		
- 	}
- 	
- 	return true;
-
- });
-
-
+	if(!/^010[0-9]{8}$/.test($phone.val())){
+		alert("유효한 전화번호가 아닙니다.");
+		return false;
+	}
+	return true;
+});
 </script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

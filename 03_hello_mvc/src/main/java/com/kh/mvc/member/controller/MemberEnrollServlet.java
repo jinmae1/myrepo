@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.kh.mvc.member.model.service.MemberService;
 import com.kh.mvc.member.model.vo.Member;
@@ -40,24 +41,31 @@ public class MemberEnrollServlet extends HttpServlet {
 		
 		request.setCharacterEncoding("utf-8");
 		
-		String memberId = request.getParameter("memberId");
-		String password= request.getParameter("password");
-		String memberName = request.getParameter("memberName");
-		String memberRole = "U";
-		String gender = request.getParameter("gender");
-		Date birthday = java.sql.Date.valueOf(request.getParameter("birthday"));
-		String email = request.getParameter("email");
-		String phone = request.getParameter("phone");
-		String address = request.getParameter("address");
-		String[] hobbies = request.getParameterValues("hobby");
-		String hobby = String.join(",", hobbies);
-		
-		Member member = new Member(memberId, password, memberName, memberRole, gender, birthday, email, phone, address, hobby, null);
-		int result = memberService.insertMember(member);
-		
-		if(result > 0) {
+		try {
+			String memberId = request.getParameter("memberId");
+			String password= request.getParameter("password");
+			String memberName = request.getParameter("memberName");
+			String gender = request.getParameter("gender");
+//			Date _birthday = java.sql.Date.valueOf(request.getParameter("birthday"));
+			String _birthday = request.getParameter("birthday");
+			Date birthday = "".equals(_birthday) ? null : Date.valueOf(_birthday);
+			String email = request.getParameter("email");
+			String phone = request.getParameter("phone");
+			String address = request.getParameter("address");
+			String[] hobbies = request.getParameterValues("hobby");
+			String hobby = hobbies != null ? String.join(",", hobbies): "";
+			
+			Member member = new Member(memberId, password, memberName, MemberService.USER_ROLE, gender, birthday, email, phone, address, hobby, null);
+			int result = memberService.insertMember(member);
+			String msg = result > 0 ? "회원가입 성공" : "회원가입 실패";
+			
+			HttpSession session = request.getSession();
+			session.setAttribute("msg", msg);
 			String location = request.getContextPath() + "/";
 			response.sendRedirect(location);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw e; // tomcat이 error.jsp로 위임하도록 처리
 		}
 		
 	}

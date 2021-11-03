@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import com.kh.mvc.member.model.vo.Member;
+import com.kh.mvc.member.model.Exception.MemberException;
 import com.kh.mvc.member.model.dao.MemberDao;
 
 public class MemberDao {
@@ -66,7 +67,7 @@ public class MemberDao {
 		return member;
 	}
 
-	public int insertMemeber(Connection conn, Member member) {
+	public int insertMember(Connection conn, Member member) {
 		PreparedStatement pstmt = null;
 		String sql = prop.getProperty("insertMember");
 		int result = 0;
@@ -88,7 +89,8 @@ public class MemberDao {
 			result = pstmt.executeUpdate();
 		}
 			catch(SQLException e) {
-				e.printStackTrace();
+				throw new MemberException("회원가입 오류!", e);
+//				e.printStackTrace();
 		} finally {
 			close(pstmt);
 		}

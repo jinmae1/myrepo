@@ -8,6 +8,8 @@ import com.kh.mvc.member.model.vo.Member;
 
 public class MemberService {
 
+	public static final String USER_ROLE = "U";
+	public static final String ADMIN_ROLE = "A";
 	private MemberDao memberDao = new MemberDao();
 
 	public Member selectOneMember(String memberId) {
@@ -28,12 +30,24 @@ public class MemberService {
 	}
 
 	public int insertMember(Member member) {
-		Connection conn = getConnection();
-		int result = memberDao.insertMemeber(conn, member);
-		if (result > 0) commit(conn);
-		else rollback(conn);
-		close(conn);
-		
+		Connection conn = null;
+		int result = 0;
+		try {
+			// 1.Connection객체 생성
+			conn = getConnection();
+			
+			// 2.Dao요청
+			result = memberDao.insertMember(conn, member);
+			
+			// 3.트랜잭션처리
+			commit(conn);
+		} catch (Exception e) {
+			rollback(conn);
+			throw e;
+		} finally {
+			// 4.Connection 자원반납
+			close(conn);
+		}
 		return result;
 	}
 }
