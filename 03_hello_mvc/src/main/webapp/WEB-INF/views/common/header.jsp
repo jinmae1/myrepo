@@ -78,7 +78,7 @@ $(() => {
 					<td colspan="2">
 						<input type="checkbox" name="saveId" id="saveId" <%= saveMemberId != null ? "checked" : "" %>/>
 						<label for="saveId">아이디저장</label>&nbsp;&nbsp;
-						<input type="button" value="회원가입">
+						<input type="button" value="회원가입" onclick="location.href='<%= request.getContextPath() %>/member/memberEnroll';">
 					</td>
 				</tr>
 			</table>
