@@ -9,6 +9,9 @@
 				<th>아이디<sup>*</sup></th>
 				<td>
 					<input type="text" placeholder="4글자이상" name="memberId" id="_memberId" required>
+					<input type="button" value="아이디중복검사" onclick="checkIdDuplicate();" />
+					<input type="hidden" id="idValid" value="0" />
+					<%-- #idValid의 값이 0이면 중복검사를 하지 않고, 1이면 중복검사 통과 --%>
 				</td>
 			</tr>
 			<tr>
@@ -77,7 +80,30 @@
 		<input type="reset" value="취소">
 	</form>
 </section>
+<form name="checkIdDuplicateFrm" action="<%= request.getContextPath() %>/member/checkIdDuplicate" method="GET">
+	<input type="hidden" name="memberId" />
+</form>
 <script>
+
+	const checkIdDuplicate = () => {
+	const url = "";
+	const name = "checkIdDuplicatePopup"; // 팝업페이지 window객체의 name속성
+	const spec = "left=500px, top=500px, width=300px, height=250px";
+	const popup = open(url, name, spec); // url 속성은 공란
+	const $memberId = $(_memberId);
+	const $frm = $(document.checkIdDuplicateFrm);
+	$frm.find("[name=memberId]").val($memberId.val());
+	$frm.attr("target", name) // popup에 폼을 제출
+		.submit();
+} 
+	
+/**
+ * 중복검사 후 아이디값을 변경한 경우 다시 중복검사 시키기
+ */
+ $(_memberId).change(() => {
+	 $(idValid).val(0);
+ })
+
 /**
  * name=memberEnrollFrm 유효성검사
  * - id/비번 영문자/숫자 4글자이상
@@ -91,6 +117,13 @@ $(document.memberEnrollFrm).submit((e) => {
 	//아이디는 영문자/숫자  4글자이상만 허용 
 	if(!/^\w{4,}$/.test($memberId.val())){
 		alert("아이디는 최소 4자리이상이어야 합니다.");
+		return false;
+	}
+	
+	// memberId 중복검사
+	const $idValid = $(idValid);
+	if($idValid.val() == 0) {
+		alert("아이디 중복 검사를 해주세요");
 		return false;
 	}
 	
