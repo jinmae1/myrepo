@@ -50,4 +50,18 @@ public class MemberService {
 		}
 		return result;
 	}
+	
+	public int updateMember(Member member) {
+		Connection conn = null;
+		int result = 0;
+		try {
+			conn = getConnection();
+			result = memberDao.updateMember(conn, member);
+		} catch(Exception e) {
+			throw e;
+		} finally {
+			close(conn);
+		}
+		return result;
+	}
 }

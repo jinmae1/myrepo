@@ -98,4 +98,32 @@ public class MemberDao {
 		return result;
 	}
 
+	public int updateMember(Connection conn, Member member) {
+		PreparedStatement pstmt = null;
+		String sql = prop.getProperty("updateMember");
+		int result = 0;
+		System.out.println("sql@MemberDao = " + sql);
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, member.getPassword());
+			pstmt.setString(2, member.getMemberName());
+			pstmt.setString(3, member.getGender());
+			pstmt.setDate(4, member.getBirthday());
+			pstmt.setString(5, member.getEmail());
+			pstmt.setString(6, member.getPhone());
+			pstmt.setString(7, member.getAddress());
+			pstmt.setString(8, member.getHobby());
+			pstmt.setString(9, member.getMemberId());
+			
+			result = pstmt.executeUpdate();
+
+		} catch(SQLException e) {
+			throw new MemberException("회원정보 수정 오류", e);
+		} finally {
+			close(pstmt);
+		}
+		return result;
+	}
+
 }
