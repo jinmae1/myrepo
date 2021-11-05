@@ -58,6 +58,7 @@ public class MemberService {
 			conn = getConnection();
 			result = memberDao.updateMember(conn, member);
 		} catch(Exception e) {
+			rollback(conn);
 			throw e;
 		} finally {
 			close(conn);

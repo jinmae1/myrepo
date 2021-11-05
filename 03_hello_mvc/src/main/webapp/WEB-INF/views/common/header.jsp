@@ -37,6 +37,7 @@ $(() => {
 	/**
 	* 로그인폼 유효성 검사
 	*/
+<% if(loginMember == null) { %>	
 	$(loginFrm).submit((e) => {
 		const $memberId = $(memberId);
 		const $password = $(password);
@@ -53,6 +54,7 @@ $(() => {
 		}
 		
 	});
+	<% } %>
 });
 
 </script>

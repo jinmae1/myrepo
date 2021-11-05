@@ -33,6 +33,7 @@ public class MemberUpdateServlet extends HttpServlet {
 		// 4. 리다이렉트 처리 및 사용자 메시지 준비
 
 		request.setCharacterEncoding("utf-8");
+		HttpSession session = request.getSession();
 
 		try {
 			String memberId = request.getParameter("memberId");
@@ -51,8 +52,11 @@ public class MemberUpdateServlet extends HttpServlet {
 					phone, address, hobby, null);
 			int result = memberService.updateMember(member);
 			String msg = result > 0 ? "회원정보 수정 성공" : "회원정보 수정 실패";
+			if(result > 0 ) {
+				Member updateMember = memberService.selectOneMember(memberId);
+				session.setAttribute("loginMember", updateMember);
+			}
 
-			HttpSession session = request.getSession();
 			session.setAttribute("msg", msg);
 			String location = request.getContextPath() + "/member/memberView";
 			response.sendRedirect(location);
