@@ -65,4 +65,20 @@ public class MemberService {
 		}
 		return result;
 	}
+
+	public int deleteMember(Member member) {
+		Connection conn = null;
+		int result = 0;
+
+		try {
+			conn = getConnection();
+			result = memberDao.deleteMember(conn, member);
+		} catch(Exception e) {
+			rollback(conn);
+			throw e;
+		} finally {
+			close(conn);
+		}
+		return result;
+	}
 }

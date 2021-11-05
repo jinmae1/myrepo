@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <section id=enroll-container>
 	<h2>회원 정보</h2>
-	<form id="memberUpdateFrm" method="post" action="<%= request.getContextPath() %>/member/memberUpdate">
+	<form id="memberUpdateFrm" method="post"> <!--  action="<%= request.getContextPath() %>/member/memberUpdate"> -->
 		<table>
 			<tr>
 				<th>아이디</th>
@@ -87,7 +87,12 @@
  */
 const updateMember = () => {
 	const $frm = $(memberUpdateFrm);
+	$frm.attr("action", "<%= request.getContextPath() %>/member/memberUpdate");
 	$frm.submit();
+}
+
+const deleteMember = () => {
+	$(memberUpdateFrm).attr("action", "<%= request.getContextPath() %>/member/memberDelete").submit();
 }
 
 /**
