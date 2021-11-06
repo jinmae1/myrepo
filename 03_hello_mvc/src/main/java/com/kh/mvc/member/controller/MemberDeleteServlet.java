@@ -3,6 +3,7 @@ package com.kh.mvc.member.controller;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,11 +33,15 @@ public class MemberDeleteServlet extends HttpServlet {
 				member.setMemberId(memberId);
 				int result = memberService.deleteMember(member);
 				String msg = result > 0 ? "회원삭제 성공" : "회원삭제 실패";
-				if(result > 0) {
-					session.invalidate();
-				}
-				HttpSession newSession = request.getSession();
-				newSession.setAttribute("msg", msg);
+                if (result > 0) {
+                    session.invalidate();
+                    Cookie c = new Cookie("saveId", memberId);
+                    c.setPath(request.getContextPath());
+                    c.setMaxAge(0);
+                    response.addCookie(c);
+                }
+
+				request.getSession().setAttribute("msg", msg);
 				String location = request.getContextPath() + "/";
 				response.sendRedirect(location);
 			} catch (IOException e) {
