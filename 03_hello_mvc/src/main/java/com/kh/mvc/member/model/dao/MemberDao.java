@@ -9,6 +9,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import com.kh.mvc.member.model.vo.Member;
@@ -106,15 +108,14 @@ public class MemberDao {
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, member.getPassword());
-			pstmt.setString(2, member.getMemberName());
-			pstmt.setString(3, member.getGender());
-			pstmt.setDate(4, member.getBirthday());
-			pstmt.setString(5, member.getEmail());
-			pstmt.setString(6, member.getPhone());
-			pstmt.setString(7, member.getAddress());
-			pstmt.setString(8, member.getHobby());
-			pstmt.setString(9, member.getMemberId());
+			pstmt.setString(1, member.getMemberName());
+			pstmt.setString(2, member.getGender());
+			pstmt.setDate(3, member.getBirthday());
+			pstmt.setString(4, member.getEmail());
+			pstmt.setString(5, member.getPhone());
+			pstmt.setString(6, member.getAddress());
+			pstmt.setString(7, member.getHobby());
+			pstmt.setString(8, member.getMemberId());
 			
 			result = pstmt.executeUpdate();
 
@@ -139,6 +140,64 @@ public class MemberDao {
 			result = pstmt.executeUpdate();
 		} catch(SQLException e) {
 			throw new MemberException("회원삭제 오류", e);
+		} finally {
+			close(pstmt);
+		}
+
+		return result;
+	}
+
+	public List<Member> selectAllMember(Connection conn) {
+		PreparedStatement pstmt = null;
+		String sql = prop.getProperty("selectAllMember");
+		List<Member> list = new ArrayList<>();
+		ResultSet rset = null;
+		System.out.println("sql@MemberDao = " + sql);
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				Member member = new Member();
+				member.setMemberId(rset.getString("member_id"));
+				member.setPassword(rset.getString("password"));
+				member.setMemberName(rset.getString("member_name"));
+				member.setMemberRole(rset.getString("member_role"));
+				member.setGender(rset.getString("gender"));
+				member.setBirthday(rset.getDate("birthday"));
+				member.setEmail(rset.getString("email"));
+				member.setPhone(rset.getString("phone"));
+				member.setAddress(rset.getString("address"));
+				member.setHobby(rset.getString("hobby"));
+				member.setEnrollDate(rset.getDate("enroll_date"));
+				
+				list.add(member);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return list;
+	}
+
+	public int updateMemberRole(Connection conn, Member member) {
+		PreparedStatement pstmt = null;
+		String sql = prop.getProperty("updateMemberRole");
+		int result = 0;
+		System.out.println("sql@MemberDao = " + sql);
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, member.getMemberRole());
+			pstmt.setString(2,  member.getMemberId());
+			
+			result = pstmt.executeUpdate();
+		} catch(SQLException e) {
+			throw new MemberException("회원권한 변경 오류", e);
 		} finally {
 			close(pstmt);
 		}

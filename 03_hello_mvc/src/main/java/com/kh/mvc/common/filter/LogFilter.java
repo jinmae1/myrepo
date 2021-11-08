@@ -24,18 +24,18 @@ public class LogFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		String uri = httpRequest.getRequestURI();
 		String queryString = httpRequest.getQueryString();
-		System.out.println("=============================");
-		System.out.println(uri);
-		if(queryString != null)
-			System.out.print(queryString);
-		System.out.println("-----------------------------");
+//		System.out.println("=============================");
+//		System.out.println(uri);
+//		if(queryString != null)
+//			System.out.print(queryString);
+//		System.out.println("-----------------------------");
 		
 		// 다음 필터 또는 Servlet연결을 위해 반드시 호출
 		/* FilterChain chain */ chain.doFilter(request, response);
 		
 		// 후처리
-		System.out.println("_____________________________");
-		System.out.println();
+//		System.out.println("_____________________________");
+//		System.out.println();
 		
 	}
 

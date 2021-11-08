@@ -12,18 +12,6 @@
 				</td>
 			</tr>
 			<tr>
-				<th>패스워드</th>
-				<td>
-					<input type="password" name="password" id="password" value="<%= loginMember.getPassword() %>" required>
-				</td>
-			</tr>
-			<tr>
-				<th>패스워드확인</th>
-				<td>	
-					<input type="password" id="password2" value="<%= loginMember.getPassword() %>" required><br>
-				</td>
-			</tr> 
-			<tr>
 				<th>이름</th>
 				<td>	
 				<input type="text"  name="memberName" id="memberName" value="<%= loginMember.getMemberName() %>" required><br>
@@ -76,6 +64,7 @@
 			</tr>
 		</table>
         <input type="button" onclick="updateMember();" value="정보수정"/>
+        <input type="button" onclick="updatePassword();" value="비밀번호 변경"/>
         <input type="button" onclick="deleteMember();" value="탈퇴"/>
 	</form>
 </section>
@@ -101,19 +90,6 @@ const deleteMember = () => {
  * - 전화번호 숫자확인
  */
 $(document.memberEnrollFrm).submit((e) => {
-	
-	
-	//password
-	const $password = $(_password);
-	const $passwordCheck = $(passwordCheck);
-	if(!/^[a-zA-Z0-9!@#$]{4,}$/.test($password.val())){
-		alert("유효한 패스워드를 입력하세요.");
-		return false;
-	}
-	if($password.val() != $passwordCheck.val()){
-		alert("패스워드가 일치하지 않습니다.");
-		return false;
-	}
 	
 	//memberName
 	const $memberName = $(memberName);

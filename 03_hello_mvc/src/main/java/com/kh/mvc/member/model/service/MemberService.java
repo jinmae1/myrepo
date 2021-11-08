@@ -2,6 +2,7 @@ package com.kh.mvc.member.model.service;
 
 import static com.kh.mvc.common.JdbcTemplate.*;
 import java.sql.Connection;
+import java.util.List;
 
 import com.kh.mvc.member.model.dao.MemberDao;
 import com.kh.mvc.member.model.vo.Member;
@@ -79,6 +80,30 @@ public class MemberService {
 		} finally {
 			close(conn);
 		}
+		return result;
+	}
+
+	public List<Member> selectAllMember() {
+		Connection conn = getConnection();
+		List<Member> list = memberDao.selectAllMember(conn);
+		close(conn);
+		return list;
+	}
+
+	public int updateMemberRole(Member member) {
+		Connection conn = null;
+		int result = 0;
+		
+		try {
+			conn = getConnection();
+			result = memberDao.updateMemberRole(conn, member);
+		} catch(Exception e) {
+			rollback(conn);
+			throw e;
+		} finally {
+			close(conn);
+		}
+		
 		return result;
 	}
 }

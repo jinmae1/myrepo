@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.kh.mvc.common.MvcUtils;
 import com.kh.mvc.member.model.service.MemberService;
 import com.kh.mvc.member.model.vo.Member;
 
@@ -37,7 +38,6 @@ public class MemberUpdateServlet extends HttpServlet {
 
 		try {
 			String memberId = request.getParameter("memberId");
-			String password = request.getParameter("password");
 			String memberName = request.getParameter("memberName");
 			String gender = request.getParameter("gender");
 			String _birthday = request.getParameter("birthday");
@@ -48,7 +48,7 @@ public class MemberUpdateServlet extends HttpServlet {
 			String[] hobbies = request.getParameterValues("hobby");
 			String hobby = hobbies != null ? String.join(",", hobbies) : "";
 
-			Member member = new Member(memberId, password, memberName, MemberService.USER_ROLE, gender, birthday, email,
+			Member member = new Member(memberId, null, memberName, MemberService.USER_ROLE, gender, birthday, email,
 					phone, address, hobby, null);
 			int result = memberService.updateMember(member);
 			String msg = result > 0 ? "회원정보 수정 성공" : "회원정보 수정 실패";
