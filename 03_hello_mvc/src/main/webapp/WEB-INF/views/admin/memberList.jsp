@@ -3,13 +3,50 @@
     pageEncoding="UTF-8"%>
 <%
 	List<Member> list = (List<Member>) request.getAttribute("list");
+	String searchType = request.getParameter("searchType");
+	String searchKeyword = request.getParameter("searchKeyword");
 %>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <!-- 관리자용 admin.css link -->
+<style>
+div#search-container {margin:0 0 10px 0; padding:3px; background-color: rgba(0, 188, 212, 0.3);}
+div#search-memberId {display: <%= searchType == null || "memberId".equals(searchType) ? "inline-block" : "none" %>;}
+div#search-memberName{display: <%= "memberName".equals(searchType) ? "inline-block" : "none" %>;}
+div#search-gender{display: <%= "gender".equals(searchType) ? "inline-block" : "none" %>;}
+</style>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/admin.css" />
 <section id="memberList-container">
 	<h2>회원관리</h2>
-	
+    <div id="search-container">
+        <label for="searchType">검색타입 :</label> 
+        <select id="searchType">
+            <option value="memberId" <%= "memberId".equals(searchType) ? "selected" : "" %>>아이디</option>		
+            <option value="memberName" <%= "memberName".equals(searchType) ? "selected" : "" %>>회원명</option>
+            <option value="gender" <%= "gender".equals(searchType) ? "selected" : "" %>>성별</option>
+        </select>
+        <div id="search-memberId" class="search-type">
+            <form action="<%=request.getContextPath()%>/admin/memberFinder">
+                <input type="hidden" name="searchType" value="memberId"/>
+                <input type="text" name="searchKeyword" value="<%= "memberId".equals(searchType) ? searchKeyword : "" %>" size="25" placeholder="검색할 아이디를 입력하세요."/>
+                <button type="submit">검색</button>			
+            </form>	
+        </div>
+        <div id="search-memberName" class="search-type">
+            <form action="<%=request.getContextPath()%>/admin/memberFinder">
+                <input type="hidden" name="searchType" value="memberName"/>
+                <input type="text" name="searchKeyword" value="<%= "memberName".equals(searchType) ? searchKeyword : "" %>" size="25" placeholder="검색할 이름을 입력하세요."/>
+                <button type="submit">검색</button>			
+            </form>	
+        </div>
+        <div id="search-gender" class="search-type">
+            <form action="<%=request.getContextPath()%>/admin/memberFinder">
+                <input type="hidden" name="searchType" value="gender"/>
+                <input type="radio" name="searchKeyword" value="M" <%= "gender".equals(searchType) && "M".equals(searchKeyword) ? "checked" : "" %>> 남
+                <input type="radio" name="searchKeyword" value="F" <%= "gender".equals(searchType) && "F".equals(searchKeyword) ? "checked" : "" %>> 여 
+                <button type="submit">검색</button>
+            </form>
+        </div>
+    </div>	
 	<table id="tbl-member">
 		<thead>
 			<tr>
@@ -61,6 +98,17 @@
 </section>
 
 <script>
+/**
+ * 검색 div 노출
+ */
+$(searchType).change((e) => {
+	$(".search-type").hide();
+	const v = $(e.target).val();
+	//$("#search-" + v).show(); // show()로 하면 원래값으로 show 되기 때문에 속성을 직접 지정해준다.
+	$("#search-" + v).css("display", "inline-block");
+
+});
+
 $(".member-role").change((e) => {
 	const $select = $(e.target);	
 	const memberRole = $select.val();

@@ -3,6 +3,7 @@ package com.kh.mvc.member.model.service;
 import static com.kh.mvc.common.JdbcTemplate.*;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 import com.kh.mvc.member.model.dao.MemberDao;
 import com.kh.mvc.member.model.vo.Member;
@@ -83,9 +84,9 @@ public class MemberService {
 		return result;
 	}
 
-	public List<Member> selectAllMember() {
+	public List<Member> selectAllMember(Map<String, Object> param) {
 		Connection conn = getConnection();
-		List<Member> list = memberDao.selectAllMember(conn);
+		List<Member> list = memberDao.selectAllMember(conn, param);
 		close(conn);
 		return list;
 	}
@@ -105,5 +106,19 @@ public class MemberService {
 		}
 		
 		return result;
+	}
+
+	public List<Member> searchMember(Map<String, Object> param) {
+		Connection conn = getConnection();
+		List<Member> list = memberDao.searchMember(conn, param);
+		close(conn);
+		return list;
+	}
+
+	public int selectTotalMemberCount() {
+		Connection conn = getConnection();
+		int totalCount = memberDao.selectTotalMemberCount(conn);
+		close(conn);
+		return totalCount;
 	}
 }

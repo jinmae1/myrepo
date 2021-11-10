@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<% String hobby = loginMember.getHobby() == null ? "" : loginMember.getHobby(); %>
 <section id=enroll-container>
 	<h2>회원 정보</h2>
 	<form id="memberUpdateFrm" method="post"> <!--  action="<%= request.getContextPath() %>/member/memberUpdate"> -->
@@ -53,11 +54,11 @@
 			<tr>
 				<th>취미 </th>
 				<td>
-					<input type="checkbox" name="hobby" id="hobby0" value="운동" <%= loginMember.getHobby().contains("운동") ? "checked" : "" %>><label for="hobby0">운동</label>
-					<input type="checkbox" name="hobby" id="hobby1" value="등산" <%= loginMember.getHobby().contains("등산") ? "checked" : "" %>><label for="hobby1">등산</label>
-					<input type="checkbox" name="hobby" id="hobby2" value="독서" <%= loginMember.getHobby().contains("독서") ? "checked" : "" %>><label for="hobby2">독서</label><br />
-					<input type="checkbox" name="hobby" id="hobby3" value="게임" <%= loginMember.getHobby().contains("게임") ? "checked" : "" %>><label for="hobby3">게임</label>
-					<input type="checkbox" name="hobby" id="hobby4" value="여행" <%= loginMember.getHobby().contains("여행") ? "checked" : "" %>><label for="hobby4">여행</label><br />
+					<input type="checkbox" name="hobby" id="hobby0" value="운동" <%= hobby.contains("운동") ? "checked" : "" %>><label for="hobby0">운동</label>
+					<input type="checkbox" name="hobby" id="hobby1" value="등산" <%= hobby.contains("등산") ? "checked" : "" %>><label for="hobby1">등산</label>
+					<input type="checkbox" name="hobby" id="hobby2" value="독서" <%= hobby.contains("독서") ? "checked" : "" %>><label for="hobby2">독서</label><br />
+					<input type="checkbox" name="hobby" id="hobby3" value="게임" <%= hobby.contains("게임") ? "checked" : "" %>><label for="hobby3">게임</label>
+					<input type="checkbox" name="hobby" id="hobby4" value="여행" <%= hobby.contains("여행") ? "checked" : "" %>><label for="hobby4">여행</label><br />
 
 
 				</td>
