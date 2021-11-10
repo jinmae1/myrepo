@@ -66,7 +66,7 @@ public class MvcUtils {
 		final int pagebarSize = 5;
 		final int totalPage = (int) Math.ceil((double) totalContent / numPerPage);
 		final int pageStart = (cPage -1) / pagebarSize * pagebarSize + 1;
-		final int pageEnd = pageStart + pagebarSize - 1;
+		int pageEnd = pageStart + pagebarSize - 1;
 		pageEnd = totalPage < pageEnd ? totalPage : pageEnd;
 		int pageNo = pageStart;
 		
@@ -82,7 +82,7 @@ public class MvcUtils {
 			if(pageNo == cPage) {
 				pagebar.append("<span class='cPage'>" + cPage + "</span>\n");
 			} else {
-				pagebar.append("<a href='" + url + (pageNo + "'>" + pageNo + "</a>\n");
+				pagebar.append("<a href='" + url + pageNo + "'>" + pageNo + "</a>\n");
 			}
 			pageNo++;
 		}
