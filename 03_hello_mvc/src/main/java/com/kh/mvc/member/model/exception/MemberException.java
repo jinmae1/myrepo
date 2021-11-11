@@ -1,4 +1,4 @@
-package com.kh.mvc.member.model.Exception;
+package com.kh.mvc.member.model.exception;
 
 public class MemberException extends RuntimeException {
 

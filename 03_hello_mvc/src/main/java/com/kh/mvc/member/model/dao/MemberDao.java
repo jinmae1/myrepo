@@ -1,11 +1,11 @@
 package com.kh.mvc.member.model.dao;
 
+
 import static com.kh.mvc.common.JdbcTemplate.close;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,26 +14,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.kh.mvc.member.model.exception.MemberException;
 import com.kh.mvc.member.model.vo.Member;
-import com.kh.mvc.member.model.Exception.MemberException;
-import com.kh.mvc.member.model.dao.MemberDao;
 
 public class MemberDao {
 	
 	private Properties prop = new Properties();
 	
-	public MemberDao() {
+	public MemberDao(){
+		// /build/classes 하위에서 파일을 조회
 		String filepath = MemberDao.class.getResource("/member-query.properties").getPath();
+		System.out.println(filepath);
 		try {
 			prop.load(new FileReader(filepath));
-			System.out.println("prop@dao = " + prop);
-			System.out.println(filepath);
-			System.out.println(MemberDao.class.getResource("/member-query.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * DQL
+	 * - PreparedStatement
+	 * - sql:String
+	 * - ResultSet
+	 * - Member VO
+	 * 
+	 * @param conn
+	 * @param memberId
+	 * @return
+	 */
 	public Member selectOneMember(Connection conn, String memberId) {
 		PreparedStatement pstmt = null;
 		String sql = prop.getProperty("selectOneMember");
@@ -41,42 +50,56 @@ public class MemberDao {
 		Member member = null;
 		
 		try {
+			// 1.pstmt객체생성 & 미완성쿼리 전달 & 값대입
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1,  memberId);
+			pstmt.setString(1, memberId);
+			// 2.쿼리실행 executeQuery : ResultSet리턴(DQL)
 			rset = pstmt.executeQuery();
-			
-			if(rset.next()) {
-//				String id = rset.getString("member_id");
-				String password = rset.getString("password");
-				String memberName = rset.getString("member_name");
-				String memberRole = rset.getString("member_role");
-				String gender = rset.getString("gender");
-				Date birthday = rset.getDate("birthday");
-				String email = rset.getString("email");
-				String phone = rset.getString("phone");
-				String address = rset.getString("address");
-				String hobby = rset.getString("hobby");
-				Date enrollDate = rset.getDate("enroll_date");
-				member = new Member(memberId, password, memberName, memberRole, gender, birthday, email, phone, address, hobby, enrollDate);
+			// 3.rset -> vo
+			while(rset.next()) {
+				member = new Member();
+				member.setMemberId(rset.getString("member_id"));
+				member.setPassword(rset.getString("password"));
+				member.setMemberName(rset.getString("member_name"));
+				member.setMemberRole(rset.getString("member_role"));
+				member.setGender(rset.getString("gender"));
+				member.setBirthday(rset.getDate("birthday"));
+				member.setEmail(rset.getString("email"));
+				member.setPhone(rset.getString("phone"));
+				member.setAddress(rset.getString("address"));
+				member.setHobby(rset.getString("hobby"));
+				member.setEnrollDate(rset.getDate("enroll_date"));
 			}
-		} catch (Exception e) {
+			
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			// 4.자원반납
 			close(rset);
 			close(pstmt);
 		}
 		
-		
 		return member;
 	}
 
+	/**
+	 * DML
+	 * - PreparedStatement
+	 * - sql:String
+	 *     insert into member values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default )
+	 * - result:int
+	 * 
+	 * @param conn
+	 * @param member
+	 * @return
+	 */
 	public int insertMember(Connection conn, Member member) {
 		PreparedStatement pstmt = null;
 		String sql = prop.getProperty("insertMember");
 		int result = 0;
-		System.out.println("sql@MemberDao = " + sql);
 		
 		try {
+			// 1.PreapredStatement객체 준비 - sql값대입
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getMemberId());
 			pstmt.setString(2, member.getPassword());
@@ -89,14 +112,16 @@ public class MemberDao {
 			pstmt.setString(9, member.getAddress());
 			pstmt.setString(10, member.getHobby());
 			
+			// 2.실행 - executeUpdate
 			result = pstmt.executeUpdate();
-		}
-			catch(SQLException e) {
-				throw new MemberException("회원가입 오류!", e);
-//				e.printStackTrace();
+			
+		} catch (SQLException e) {
+			throw new MemberException("회원가입 오류!", e);
 		} finally {
+			// 3.자원반납
 			close(pstmt);
 		}
+		
 		
 		return result;
 	}
@@ -105,7 +130,6 @@ public class MemberDao {
 		PreparedStatement pstmt = null;
 		String sql = prop.getProperty("updateMember");
 		int result = 0;
-		System.out.println("sql@MemberDao = " + sql);
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -119,49 +143,55 @@ public class MemberDao {
 			pstmt.setString(8, member.getMemberId());
 			
 			result = pstmt.executeUpdate();
-
-		} catch(SQLException e) {
-			throw new MemberException("회원정보 수정 오류", e);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
 		} finally {
 			close(pstmt);
 		}
+		
 		return result;
 	}
 
-	public int deleteMember(Connection conn, Member member) {
-		PreparedStatement pstmt = null;
-		String sql = prop.getProperty("deleteMember");
+	    
+	public int deleteMember(Connection conn, String membmerId) {
 		int result = 0;
-		System.out.println("sql@MemberDao = " + sql);
-		
+		PreparedStatement pstmt = null;
+		String query = prop.getProperty("deleteMember"); 
+
 		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, member.getMemberId());
-//			pstmt.setString(2, member.getPassword());
+			//미완성쿼리문을 가지고 객체생성.
+			pstmt = conn.prepareStatement(query);
+			//쿼리문미완성
+			pstmt.setString(1, membmerId);
+			
+			//쿼리문실행 : 완성된 쿼리를 가지고 있는 pstmt실행(파라미터 없음)
+			//DML은 executeUpdate()
 			result = pstmt.executeUpdate();
-		} catch(SQLException e) {
-			throw new MemberException("회원삭제 오류", e);
+			
+		} catch (SQLException e) {
+			throw new MemberException("회원 삭제 오류!", e);
 		} finally {
 			close(pstmt);
-		}
-
+		} 
+		
 		return result;
 	}
 
 	public List<Member> selectAllMember(Connection conn, Map<String, Object> param) {
 		PreparedStatement pstmt = null;
 		String sql = prop.getProperty("selectAllMember");
-		List<Member> list = new ArrayList<>();
 		ResultSet rset = null;
-		System.out.println("sql@MemberDao = " + sql);
-		
+		List<Member> list = new ArrayList<>();
 		try {
+			// 1.pstmt객체생성
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, (int) param.get("startNum"));
 			pstmt.setInt(2, (int) param.get("endNum"));
 			
+			// 2.실행
 			rset = pstmt.executeQuery();
-			
+			// 3.rset처리 : 하나의 레코드 -> vo객체하나 -> list에 추가
 			while(rset.next()) {
 				Member member = new Member();
 				member.setMemberId(rset.getString("member_id"));
@@ -175,40 +205,69 @@ public class MemberDao {
 				member.setAddress(rset.getString("address"));
 				member.setHobby(rset.getString("hobby"));
 				member.setEnrollDate(rset.getDate("enroll_date"));
-				
 				list.add(member);
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			// 4.자원반납
 			close(rset);
 			close(pstmt);
 		}
-		
 		return list;
 	}
 
 	public int updateMemberRole(Connection conn, Member member) {
-		PreparedStatement pstmt = null;
-		String sql = prop.getProperty("updateMemberRole");
 		int result = 0;
-		System.out.println("sql@MemberDao = " + sql);
-		
+		PreparedStatement pstmt = null;
+		String query = prop.getProperty("updateMemberRole"); 
+
 		try {
-			pstmt = conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, member.getMemberRole());
-			pstmt.setString(2,  member.getMemberId());
-			
+			pstmt.setString(2, member.getMemberId());
 			result = pstmt.executeUpdate();
-		} catch(SQLException e) {
-			throw new MemberException("회원권한 변경 오류", e);
+		} catch (SQLException e) {
+			throw new MemberException("회원권한변경 오류!", e);
 		} finally {
 			close(pstmt);
 		}
+		return result;
 
+	}
+
+	public int updatePassword(Connection conn, Member member) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String query = prop.getProperty("updatePassword"); 
+
+		try {
+			//미완성쿼리문을 가지고 객체생성.
+			pstmt = conn.prepareStatement(query);
+			//쿼리문미완성
+			pstmt.setString(1, member.getPassword());
+			pstmt.setString(2, member.getMemberId());
+			
+			//쿼리문실행 : 완성된 쿼리를 가지고 있는 pstmt실행(파라미터 없음)
+			//DML은 executeUpdate()
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new MemberException("비밀번호 수정 오류!", e);
+		} finally {
+			close(pstmt);
+		}
+		
 		return result;
 	}
 
+	/**
+	 * 
+	 * select * from member where member_id like ?
+	 * select * from member where member_name like ?
+	 * select * from member where gender = ?
+	 * 
+	 */
 	public List<Member> searchMember(Connection conn, Map<String, Object> param) {
 		PreparedStatement pstmt = null;
 		String sql = prop.getProperty("searchMember");
@@ -217,13 +276,11 @@ public class MemberDao {
 		
 		String searchType = (String) param.get("searchType");
 		String searchKeyword = (String) param.get("searchKeyword");
-
 		switch(searchType) {
 		case "memberId": sql += " member_id like '%" + searchKeyword + "%'"; break;
 		case "memberName": sql += " member_name like '%" + searchKeyword + "%'"; break;
 		case "gender": sql += " gender = '" + searchKeyword + "'"; break;
 		}
-		
 		System.out.println("sql@dao = " + sql);
 		
 		try {
@@ -242,18 +299,19 @@ public class MemberDao {
 				member.setAddress(rset.getString("address"));
 				member.setHobby(rset.getString("hobby"));
 				member.setEnrollDate(rset.getDate("enroll_date"));
-				
 				list.add(member);
 			}
-
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			close(rset);
 			close(pstmt);
 		}
-
+		
+		
 		return list;
+		
 	}
 
 	public int selectTotalMemberCount(Connection conn) {
@@ -265,17 +323,16 @@ public class MemberDao {
 		try {
 			pstmt = conn.prepareStatement(sql);
 			rset = pstmt.executeQuery();
-			if(rset.next()) {
-				totalCount = rset.getInt(1); // 컬럼 인덱스로 접근
-			}
+			if(rset.next())
+				totalCount = rset.getInt(1); // 컬럼인덱스 1부터
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			close(rset);
 			close(pstmt);
 		}
-
 		return totalCount;
 	}
+
 
 }

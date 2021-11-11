@@ -6,44 +6,43 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 
-
 public class MvcUtils {
 
+	
 	/**
 	 * 비밀번호 암호화 처리 메소드
 	 * 
 	 * 1. 암호화 처리 MessageDigest
 	 * 
-	 * 2. 암호화된 이진배열 문자열 인코딩 처리 Base64Encoder
+	 * 2. 암호화된 이진배열을 문자열로 인코딩 처리 Base64Encoder
+	 * 
 	 * @param parameter
 	 * @return
 	 */
-	public static String getEncyptedPassword(String password) {
-		// TODO Auto-generated method stub
+	public static String getEncryptedPassword(String password) {
 		
-		// 1. 암호화처리
+		// 1.암호화처리
 		byte[] encrypted = null;
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-512");
 			byte[] plain = password.getBytes("utf-8");
-			md.update(plain); // md객체에 원본 문자열 설정
+			md.update(plain); // md객체에 원본문자열 설정
 			encrypted = md.digest(); // 암호화
 		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println(new String(encrypted));
-
-		// 2. 인코딩처리
-		// 영문자, 숫자, +, / 로 이루어진 64개의 문자를 사용 (=는 패딩문자다)
+		
+		// 2.인코딩처리 
+		// 영문자, 숫자, +, / 64개의 문자를 사용(= 패딩문자도 사용)
 		Encoder encoder = Base64.getEncoder();
 		String encryptedPassword = encoder.encodeToString(encrypted);
 		
 		System.out.println(encryptedPassword);
-
+		
 		return encryptedPassword;
 	}
-	
+
 	/**
 	 * 
 	 * @param cPage
@@ -58,44 +57,48 @@ public class MvcUtils {
 	 * 
 	 * @return
 	 */
-
 	public static String getPagebar(int cPage, int numPerPage, int totalContent, String url) {
-		StringBuilder pagebar = new StringBuilder();
-		url = url + "?cPage="; // PageNo 추가 전 상태
+		StringBuilder pagebar = new StringBuilder(); 
+		url = url + "?cPage="; // pageNo 추가전 상태
 		
 		final int pagebarSize = 5;
 		final int totalPage = (int) Math.ceil((double) totalContent / numPerPage);
-		final int pageStart = (cPage -1) / pagebarSize * pagebarSize + 1;
+		final int pageStart = (cPage - 1) / pagebarSize * pagebarSize + 1;
 		int pageEnd = pageStart + pagebarSize - 1;
 		pageEnd = totalPage < pageEnd ? totalPage : pageEnd;
 		int pageNo = pageStart;
-		
+
 		// [이전]
 		if(pageNo == 1) {
-
-		} else {
-			pagebar.append("<a href='" + url + (pageNo - 1) + "'></a>\n");
+			// cPage = 1, 2, 3, 4, 5
+		}
+		else {
+			pagebar.append("<a href='" + url + (pageNo - 1) + "'>prev</a>\n");
 		}
 		
 		// pageNo
 		while(pageNo <= pageEnd) {
 			if(pageNo == cPage) {
 				pagebar.append("<span class='cPage'>" + cPage + "</span>\n");
-			} else {
+			}
+			else {
 				pagebar.append("<a href='" + url + pageNo + "'>" + pageNo + "</a>\n");
 			}
+			
 			pageNo++;
 		}
-		// [다음]
 		
+		
+		// [다음]
 		if(pageNo > totalPage) {
 			
-		} else {
+		}
+		else {
 			pagebar.append("<a href='" + url + pageNo + "'>next</a>\n");
 		}
 		
-
 		return pagebar.toString();
 	}
 
 }
+

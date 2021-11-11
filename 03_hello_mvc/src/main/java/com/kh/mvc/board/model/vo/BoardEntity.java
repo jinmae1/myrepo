@@ -2,8 +2,13 @@ package com.kh.mvc.board.model.vo;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 public class BoardEntity implements Serializable {
+
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 	
 	private int no;
@@ -12,9 +17,10 @@ public class BoardEntity implements Serializable {
 	private String content;
 	private int readCount;
 	private Date regDate;
-
+	
 	public BoardEntity() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public BoardEntity(int no, String title, String writer, String content, int readCount, Date regDate) {
@@ -75,14 +81,12 @@ public class BoardEntity implements Serializable {
 		this.regDate = regDate;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	@Override
 	public String toString() {
 		return "BoardEntity [no=" + no + ", title=" + title + ", writer=" + writer + ", content=" + content
 				+ ", readCount=" + readCount + ", regDate=" + regDate + "]";
 	}
 	
+	
+
 }

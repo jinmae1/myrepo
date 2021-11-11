@@ -1,6 +1,7 @@
 package com.kh.mvc.board.model.dao;
 
 import static com.kh.mvc.common.JdbcTemplate.close;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,16 +17,19 @@ import java.util.Properties;
 import com.kh.mvc.board.model.vo.Board;
 
 public class BoardDao {
-	
+
 	private Properties prop = new Properties();
 	
+	/**
+	 * board-query.properties 파일의 key=value 쿼리를 가져온다.
+	 * - 클래스객체를 통해 build-path에 배포된 파일에 접근할 것!
+	 * 
+	 */
 	public BoardDao() {
 		File file = new File(BoardDao.class.getResource("/board-query.properties").getPath());
-		System.out.println("+++++++++++++++++" + file + "++++++++++++++++++++");
 		try {
 			prop.load(new FileReader(file));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -51,17 +55,16 @@ public class BoardDao {
 				board.setContent(rset.getString("content"));
 				board.setReadCount(rset.getInt("read_count"));
 				board.setRegDate(rset.getDate("reg_date"));
-				
+				board.setAttachCount(rset.getInt("attach_count"));
 				list.add(board);
 			}
-
-		} catch(SQLException e) {
+			
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			close(rset);
 			close(pstmt);
 		}
-
 		return list;
 	}
 
@@ -83,9 +86,6 @@ public class BoardDao {
 			close(rset);
 			close(pstmt);
 		}
-		
-		
 		return totalCount;
 	}
-
 }

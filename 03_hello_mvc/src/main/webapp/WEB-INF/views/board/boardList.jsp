@@ -16,24 +16,27 @@
 			<th>조회수</th>
 		</tr>
 		
-<%
-	List<Board> list = (List<Board>) request.getAttribute("list");
-	for(Board board: list) {
+<% 
+	List<Board> list = (List<Board>) request.getAttribute("list"); 
+	for(Board board : list){
 %>
-
-	<tr>
-		<td><%= board.getNo() %></td>
-		<td><%= board.getTitle() %></td>
-		<td><%= board.getWriter() %></td>
-		<td><%= board.getRegDate() %></td>
-		<td></td>
-		<td><%= board.getReadCount() %></td>
-	</tr>
-<%
+		<tr>
+			<td><%= board.getNo() %></td>
+			<td><%= board.getTitle() %></td>
+			<td><%= board.getWriter() %></td>
+			<td><%= board.getRegDate() %></td>
+			<td>
+<% 	if(board.getAttachCount() > 0){ %>
+				<img alt="" src="<%= request.getContextPath() %>/images/file.png" width="16px">	
+<%	}	%>
+			</td>
+			<td><%= board.getReadCount() %></td>
+		</tr>
+	
+<%			
 	}
-%>
+%>		
 	</table>
-
-	<div id='pageBar'<%= request.getAttribute("pagebar") %>></div>
+	<div id='pageBar'><%= request.getAttribute("pagebar") %></div>
 </section>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

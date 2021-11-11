@@ -21,17 +21,15 @@ import com.kh.mvc.member.model.vo.Member;
 public class AdminMemberFinderServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private MemberService memberService = new MemberService();
-
+	
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 * 
 	 * select * from member where member_id like ?
 	 * select * from member where member_name like ?
 	 * select * from member where gender = ?
 	 * 
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 1. 사용자 입력값 처리
+		// 1.사용자입력값처리
 		String searchType = request.getParameter("searchType");
 		String searchKeyword = request.getParameter("searchKeyword");
 		Map<String, Object> param = new HashMap<>();
@@ -39,13 +37,18 @@ public class AdminMemberFinderServlet extends HttpServlet {
 		param.put("searchKeyword", searchKeyword);
 		System.out.println("param@servlet = " + param);
 		
-		// 2. 업무 로직
+		// 2.업무로직
 		List<Member> list = memberService.searchMember(param);
 		System.out.println("list@servlet = " + list);
 		
-		// 3. view단 처리
+		// 3.view단처리
 		request.setAttribute("list", list);
-		request.getRequestDispatcher("/WEB-INF/views/admin/memberList.jsp").forward(request, response);
+		request
+			.getRequestDispatcher("/WEB-INF/views/admin/memberList.jsp")
+			.forward(request, response);
+	
+	
+	
 	}
 
 }
