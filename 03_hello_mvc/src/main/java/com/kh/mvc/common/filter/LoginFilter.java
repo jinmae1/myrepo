@@ -1,6 +1,7 @@
 package com.kh.mvc.common.filter;
 
 import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -17,7 +18,7 @@ import com.kh.mvc.member.model.vo.Member;
 /**
  * Servlet Filter implementation class LoginFilter
  */
-@WebFilter("/member/memberView")
+@WebFilter(urlPatterns = {"/member/memberView", "/member/memberUpdate"})
 public class LoginFilter implements Filter {
 
     /**
@@ -38,19 +39,21 @@ public class LoginFilter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		
-		HttpServletResponse httpResponse = (HttpServletResponse) response;
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+		// 로그인여부 검사
 		HttpSession session = httpRequest.getSession();
 		Member loginMember = (Member) session.getAttribute("loginMember");
 		
 		if(loginMember == null) {
-			session.setAttribute("msg", "로그인 후 이용하세요");
+			session.setAttribute("msg", "로그인후 이용하세요.");
 			httpResponse.sendRedirect(httpRequest.getContextPath() + "/");
 			return;
 		}
-
-		// pass the request along the filter chain
+		
+		
+		
 		chain.doFilter(request, response);
 	}
 
